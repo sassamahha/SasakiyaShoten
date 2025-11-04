@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Plan {
+  free
+  pro
+}
+
+enum StoreBookStatus {
+  draft
+  public
+}
+
+model User {
+  id    String  @id @default(uuid())
+  email String  @unique
+  name  String?
+  tenants Tenant[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Tenant {
+  id          String  @id @default(uuid())
+  handle      String  @unique
+  name        String
+  plan        Plan    @default(free)
+  amazonTag   String?
+  ownerUserId String
+  owner       User    @relation(fields: [ownerUserId], references: [id])
+  storeBooks  StoreBook[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Book {
+  id          String   @id @default(uuid())
+  asin        String   @unique
+  title       String
+  author      String
+  description String
+  imageUrl    String?
+  source      Json?
+  storeBooks  StoreBook[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model StoreBook {
+  id        String          @id @default(uuid())
+  tenantId  String
+  bookId    String
+  status    StoreBookStatus @default(public)
+  sortOrder Int?
+  note      String?
+  tenant    Tenant          @relation(fields: [tenantId], references: [id])
+  book      Book            @relation(fields: [bookId], references: [id])
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  @@unique([tenantId, bookId], name: "tenantId_bookId")
+}
