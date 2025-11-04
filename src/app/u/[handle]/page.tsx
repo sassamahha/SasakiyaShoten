@@ -36,8 +36,6 @@ export default async function StorefrontPage({ params }: StorePageProps) {
         {books.map((book) => (
           <article key={book!.asin} className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-t-2xl bg-slate-100">
-              {book!.image_url ? (
-                <Image src={book!.image_url} alt={`${book!.title} のカバー`} fill className="object-cover" />
               ) : (
                 <div className="flex h-full items-center justify-center text-sm text-slate-400">No Image</div>
               )}
