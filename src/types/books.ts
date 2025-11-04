@@ -4,6 +4,5 @@ export type BookBaseData = {
   title: string;
   author: string;
   description?: string | null;
-  imageUrl?: string | null;
   source?: Prisma.InputJsonValue | null;
 };

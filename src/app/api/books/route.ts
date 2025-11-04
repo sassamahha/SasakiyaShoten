@@ -23,16 +23,6 @@ export async function POST(request: Request) {
   const existing = await prisma.book.findUnique({ where: { asin } });
 
   let bookRecord = existing;
-  if (!bookRecord) {
-    const paapi = await lookupAsin(asin);
-
-      title: overrides.titleOverride ?? paapi?.title ?? "",
-      author: overrides.authorOverride ?? paapi?.author ?? "",
-      description: overrides.descriptionOverride ?? paapi?.description ?? "",
-      imageUrl: overrides.imageUrlOverride ?? paapi?.imageUrl ?? null,
-      source: paapi?.source ?? null
-    };
-
     });
   }
 
