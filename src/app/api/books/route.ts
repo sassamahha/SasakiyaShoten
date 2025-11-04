@@ -1,7 +1,4 @@
 import { NextResponse } from "next/server";
-import { z } from "zod";
-import { prisma } from "@/lib/prisma";
-import { lookupAsin } from "@/lib/paapi";
 
 const createBookSchema = z.object({
   asin: z.string().min(10).max(16),
@@ -29,7 +26,6 @@ export async function POST(request: Request) {
   if (!bookRecord) {
     const paapi = await lookupAsin(asin);
 
-    const baseData = {
       title: overrides.titleOverride ?? paapi?.title ?? "",
       author: overrides.authorOverride ?? paapi?.author ?? "",
       description: overrides.descriptionOverride ?? paapi?.description ?? "",
@@ -37,11 +33,6 @@ export async function POST(request: Request) {
       source: paapi?.source ?? null
     };
 
-    bookRecord = await prisma.book.create({
-      data: {
-        asin,
-        ...baseData
-      }
     });
   }
 

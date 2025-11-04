@@ -6,7 +6,6 @@ export interface PaapiBookItem {
   author: string;
   description: string;
   imageUrl?: string | null;
-  source: Record<string, unknown>;
 }
 
 export async function lookupAsin(asin: string): Promise<PaapiBookItem | null> {
@@ -69,7 +68,6 @@ export async function lookupAsin(asin: string): Promise<PaapiBookItem | null> {
       author,
       description,
       imageUrl,
-      source: item
     };
   } catch (error) {
     console.error("PA-API lookup error", error);
