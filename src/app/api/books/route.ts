@@ -1,9 +1,4 @@
 import { NextResponse } from "next/server";
-import { Prisma } from "@prisma/client";
-import { z } from "zod";
-import { prisma } from "@/lib/prisma";
-import { lookupAsin } from "@/lib/paapi";
-import type { BookBaseData } from "@/types/books";
 
 const createBookSchema = z.object({
   asin: z.string().min(10).max(16),
@@ -31,7 +26,6 @@ export async function POST(request: Request) {
   if (!bookRecord) {
     const paapi = await lookupAsin(asin);
 
-    const baseData: BookBaseData = {
       title: overrides.titleOverride ?? paapi?.title ?? "",
       author: overrides.authorOverride ?? paapi?.author ?? "",
       description: overrides.descriptionOverride ?? paapi?.description ?? "",
@@ -39,28 +33,6 @@ export async function POST(request: Request) {
       source: paapi?.source ?? null
     };
 
-    const createData: {
-      asin: string;
-      title: string;
-      author: string;
-      description: string;
-      imageUrl?: string | null;
-      source?: Prisma.InputJsonValue | typeof Prisma.JsonNull;
-    } = {
-      asin,
-      title: baseData.title,
-      author: baseData.author,
-      description: baseData.description ?? "",
-      imageUrl: baseData.imageUrl ?? null
-    };
-
-    if (typeof baseData.source !== "undefined") {
-      createData.source =
-        baseData.source === null ? Prisma.JsonNull : (baseData.source as Prisma.InputJsonValue);
-    }
-
-    bookRecord = await prisma.book.create({
-      data: createData
     });
   }
 

@@ -11,9 +11,6 @@ const nextConfig = {
         hostname: "m.media-amazon.com"
       }
     ]
-  },
-  eslint: {
-    ignoreDuringBuilds: true
   }
 };
 

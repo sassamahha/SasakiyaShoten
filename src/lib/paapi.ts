@@ -1,5 +1,4 @@
 import "server-only";
-import type { Prisma } from "@prisma/client";
 
 export interface PaapiBookItem {
   asin: string;
@@ -7,7 +6,6 @@ export interface PaapiBookItem {
   author: string;
   description: string;
   imageUrl?: string | null;
-  source: Prisma.InputJsonValue;
 }
 
 export async function lookupAsin(asin: string): Promise<PaapiBookItem | null> {
@@ -70,7 +68,6 @@ export async function lookupAsin(asin: string): Promise<PaapiBookItem | null> {
       author,
       description,
       imageUrl,
-      source: item as Prisma.InputJsonValue
     };
   } catch (error) {
     console.error("PA-API lookup error", error);
