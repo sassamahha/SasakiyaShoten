@@ -5,7 +5,6 @@ interface BookSummary {
   title: string;
   author: string;
   description: string;
-  image_url?: string | null;
 }
 
 interface StoreBookEntry {
@@ -30,21 +29,18 @@ export const tenantCatalogMock = {
       title: "スタートアップ・ガイド",
       author: "佐々木 未来",
       description: "起業初期に必要な Kindle コンテンツ運営の基礎をわかりやすく解説。",
-      image_url: "https://m.media-amazon.com/images/I/71b0w6wQyFL.jpg"
     },
     {
       asin: "B0C1234567",
       title: "配色デザインの教科書",
       author: "田中 彩",
       description: "ビジュアルデザインに役立つ配色ルールと具体例を収録。",
-      image_url: "https://m.media-amazon.com/images/I/81u2FQ+1GZL.jpg"
     },
     {
       asin: "B08ABCDEF0",
       title: "React 実践レシピ",
       author: "山本 エンジ",
       description: "Next.js と TypeScript によるフロントエンド開発の最短ルート。",
-      image_url: "https://m.media-amazon.com/images/I/71vZ1WxyWNL.jpg"
     }
   ] satisfies BookSummary[],
   storeBooks: [
