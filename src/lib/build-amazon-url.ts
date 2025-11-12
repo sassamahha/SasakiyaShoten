@@ -6,10 +6,15 @@ export interface TenantLike {
   amazonTag?: string | null;
 }
 
+export function resolveAmazonTag(tenant?: TenantLike | null) {
+  const fallbackTag = process.env.AMZ_ASSOC_TAG_DEFAULT ?? "sasakiyashoten-22";
+  if (tenant?.plan === "pro" && tenant.amazonTag) {
+    return tenant.amazonTag;
+  }
+  return fallbackTag;
+}
+
 export function buildAmazonUrl(asin: string, tenant?: TenantLike | null) {
-  const base = `https://www.amazon.co.jp/dp/${asin}`;
-  const fallbackTag = process.env.AMZ_ASSOC_TAG_DEFAULT ?? "SasakiyaTag-22";
-  const shouldUseTenantTag = tenant?.plan === "pro" && tenant.amazonTag;
-  const tag = shouldUseTenantTag ? tenant.amazonTag! : fallbackTag;
-  return `${base}/?tag=${encodeURIComponent(tag)}`;
+  const tag = resolveAmazonTag(tenant);
+  return `https://www.amazon.co.jp/dp/${asin}?tag=${encodeURIComponent(tag)}`;
 }
