@@ -3,17 +3,17 @@ import Link from "next/link";
 const steps = [
   {
     title: "ASIN を登録",
-    description: "管理ダッシュボードから Kindle ASIN を登録すると、PA-API でメタデータを自動取得します。"
+    description: "管理ダッシュボードから Kindle ASIN を登録すると、PA-API でメタデータを自動取得します。",
   },
   {
     title: "棚に並べる",
-    description: "取得した書誌情報をプレビューしつつ、並び順や公開ステータスを管理できます。"
+    description: "取得した書誌情報をプレビューしつつ、並び順や公開ステータスを管理できます。",
   },
   {
     title: "アフィリンクで収益化",
     description:
-      "無料プランではささきや書店のタグを、自分のタグを設定したい場合は Pro プランへアップグレード。"
-  }
+      "無料プランでは既定タグ、Pro プランでは自分のアフィリエイトタグを設定して Amazon に遷移させます。",
+  },
 ];
 
 export default function HomePage() {
@@ -33,16 +33,16 @@ export default function HomePage() {
           </p>
           <div className="flex flex-wrap gap-3">
             <Link
-              href="/dashboard"
+              href="/@official/dashboard"
               className="inline-flex items-center justify-center rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm transition hover:opacity-90"
             >
-              ダッシュボードへ
+              ダッシュボードをみる
             </Link>
             <Link
-              href="/terms"
+              href="/@official"
               className="inline-flex items-center justify-center rounded-md border border-slate-300 px-5 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-white/70"
             >
-              利用規約を見る
+              公開ストアを見る
             </Link>
           </div>
         </div>
@@ -50,8 +50,8 @@ export default function HomePage() {
           <h2 className="mb-3 text-lg font-semibold text-slate-800">機能ハイライト</h2>
           <ul className="space-y-3">
             <li>⚡️ Amazon PA-API (JP) と連携した ASIN 取得</li>
-            <li>🪄 マルチテナント構成で無料/有料プラン切替</li>
-            <li>💸 アフィリエイトタグを自動付与するリンク生成</li>
+            <li>🪄 `@username` 形式のカスタムストア URL</li>
+            <li>💸 プラン別のアフィリエイトタグ自動付与</li>
             <li>🚀 Next.js 14 + Prisma + Stripe で構成</li>
           </ul>
         </div>
