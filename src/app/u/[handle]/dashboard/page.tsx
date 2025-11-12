@@ -1,70 +1,92 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
-
-import { DashboardClient } from "./client";
-import { auth } from "@/auth";
-import { getStorefrontBooks, getTenantByHandle } from "@/lib/mock-repository";
-
-export const metadata = {
-  title: "ダッシュボード | ささきや書店",
-  robots: {
-    index: false,
-    follow: false,
-  },
-};
+import type { Metadata } from "next";
 
 interface DashboardPageProps {
   params: { handle: string };
 }
 
-export default async function DashboardPage({ params }: DashboardPageProps) {
-  const session = await auth();
-  const tenant = getTenantByHandle(params.handle);
+const dummyEntries = Array.from({ length: 4 }, (_, index) => ({
+  id: index + 1,
+  asin: `B0${index}FAKE${index}`,
+  title: `登録予定タイトル ${index + 1}`,
+  status: index % 2 === 0 ? "下書き" : "公開準備中"
+}));
 
-  if (!tenant) {
-    notFound();
-  }
+export function generateMetadata({ params }: DashboardPageProps): Metadata {
+  return {
+    title: `@${params.handle} のダッシュボード | ささきや書店`
+  };
+}
 
-  if (!session) {
-    return (
-      <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-16 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">管理ダッシュボードへはログインが必要です</h1>
-        <p className="text-sm text-slate-600">メールアドレスまたは Google アカウントでログインしてください。</p>
-        <div className="flex justify-center">
-          <Link
-            href={`/login?callbackUrl=/@${tenant.handle}/dashboard`}
-            className="inline-flex items-center justify-center rounded-md bg-brand px-5 py-2.5 text-sm font-semibold text-brand-foreground shadow-sm transition hover:opacity-90"
-          >
-            ログインページへ
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (session.user?.id !== tenant.ownerUserId) {
-    return (
-      <div className="mx-auto flex max-w-3xl flex-col gap-6 px-6 py-16 text-center">
-        <h1 className="text-2xl font-semibold text-slate-900">アクセス権がありません</h1>
-        <p className="text-sm text-slate-600">このストアのオーナーのみがダッシュボードにアクセスできます。</p>
-        <div className="flex justify-center">
-          <Link href={`/@${tenant.handle}`} className="text-sm font-semibold text-brand">
-            ストアページに戻る
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  const books = getStorefrontBooks(tenant.handle);
-
+export default function DashboardPage({ params }: DashboardPageProps) {
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-10 px-6 py-12">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-semibold text-slate-900">{tenant.name} の管理</h1>
-        <p className="text-sm text-slate-600">ASIN を追加して紹介文を管理し、公開ステータスや並び順を変更できます。</p>
-      </div>
-      <DashboardClient tenantId={tenant.id} tenantHandle={tenant.handle} initialBooks={books} />
+    <div className="mx-auto flex max-w-5xl flex-col gap-10 px-5 py-12">
+      <header className="space-y-2">
+        <p className="text-sm font-semibold text-slate-500">DASHBOARD</p>
+        <h1 className="text-3xl font-semibold tracking-tight text-slate-900">@{params.handle}</h1>
+        <p className="text-sm leading-relaxed text-slate-600">
+          こちらは @{params.handle} さんのダッシュボードのダミービューです。今後ここから商品登録を行えるようになります。
+        </p>
+      </header>
+
+      <section className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
+        <h2 className="mb-6 text-lg font-semibold text-slate-900">新しい書籍を登録</h2>
+        <form className="grid gap-6 sm:grid-cols-2">
+          <div className="space-y-2">
+            <label htmlFor="asin" className="text-sm font-semibold text-slate-700">
+              ASIN
+            </label>
+            <input
+              id="asin"
+              name="asin"
+              type="text"
+              placeholder="例: B012345678"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/50"
+            />
+            <p className="text-xs text-slate-500">Amazon の商品コードを入力してください。</p>
+          </div>
+          <div className="space-y-2 sm:col-span-2">
+            <label htmlFor="summary" className="text-sm font-semibold text-slate-700">
+              紹介文
+            </label>
+            <textarea
+              id="summary"
+              name="summary"
+              rows={4}
+              placeholder="ここに紹介文を入力します。"
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm shadow-sm focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/50"
+            />
+            <p className="text-xs text-slate-500">実装予定：AI で自動生成した紹介文をプレビューします。</p>
+          </div>
+          <div className="sm:col-span-2">
+            <button
+              type="button"
+              className="inline-flex w-full items-center justify-center rounded-xl bg-brand px-4 py-3 text-sm font-semibold text-brand-foreground shadow-sm transition hover:opacity-90"
+            >
+              下書きとして保存（ダミー）
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <section className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-slate-900">最近の登録状況</h2>
+          <span className="text-xs font-semibold text-slate-500">データ連携はまだ行われていません</span>
+        </div>
+        <div className="divide-y divide-slate-200 rounded-3xl border border-slate-200 bg-white shadow-sm">
+          {dummyEntries.map((entry) => (
+            <div key={entry.id} className="flex flex-col gap-2 px-6 py-5 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">{entry.title}</p>
+                <p className="text-xs text-slate-500">ASIN: {entry.asin}</p>
+              </div>
+              <span className="inline-flex h-7 items-center rounded-full bg-slate-100 px-3 text-xs font-semibold text-slate-600">
+                {entry.status}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

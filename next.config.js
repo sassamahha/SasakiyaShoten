@@ -10,8 +10,12 @@ const nextConfig = {
         destination: "/u/:handle",
       },
       {
-        source: "/@:handle/:path*",
-        destination: "/u/:handle/:path*",
+        source: "/@:handle/dashboard",
+        destination: "/u/:handle/dashboard",
+      },
+      {
+        source: "/@:handle/settings",
+        destination: "/u/:handle/settings",
       },
     ];
   },

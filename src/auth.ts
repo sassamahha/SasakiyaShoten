@@ -1,39 +1,12 @@
-import NextAuth from "next-auth";
-import { PrismaAdapter } from "@auth/prisma-adapter";
-import GoogleProvider from "next-auth/providers/google";
-import EmailProvider from "next-auth/providers/email";
+export const auth = async () => null;
 
-import { prisma } from "./lib/prisma";
+export const signIn = async (..._args: unknown[]) => {
+  throw new Error("signIn is not implemented in the auth stub.");
+};
 
-const emailFrom = process.env.EMAIL_FROM ?? "no-reply@sasakiya.shoten";
+export const signOut = async (..._args: unknown[]) => {};
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma),
-  session: {
-    strategy: "database",
-  },
-  pages: {
-    signIn: "/login",
-  },
-  providers: [
-    EmailProvider({
-      from: emailFrom,
-      async sendVerificationRequest({ identifier, url }) {
-        console.info(`Send magic link to ${identifier}: ${url}`);
-      },
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID ?? "", // Provide via environment variables
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
-    }),
-  ],
-  secret: process.env.NEXTAUTH_SECRET,
-  callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-      }
-      return session;
-    },
-  },
-});
+export const handlers = {
+  GET: () => new Response(null, { status: 404 }),
+  POST: () => new Response(null, { status: 404 })
+};
